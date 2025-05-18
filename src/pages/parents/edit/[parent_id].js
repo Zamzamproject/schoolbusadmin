@@ -7,6 +7,7 @@ import {
   collection,
   where,
   serverTimestamp,
+  documentId,
   getDoc,
   doc,
   updateDoc,
@@ -36,7 +37,7 @@ export default function EditParent() {
     e.preventDefault();
     if (
       e.target.first_name.value === "" ||
-      e.target.last_name.value === "" || 
+      e.target.last_name.value === "" ||
       e.target.email.value === ""
     ) {
       setMsg("Please enter all the required feilds");
@@ -45,14 +46,30 @@ export default function EditParent() {
     } else if (!/^[a-zA-Z ]+$/.test(e.target.last_name.value)) {
       setMsg("Please enter a valid last name.");
     } else {
-      updateDoc(doc(database, "parents", parent_id), {
-        first_name: e.target.first_name.value,
-        last_name: e.target.last_name.value,
-        mobile: e.target.mobile.value,
-        email: e.target.email.value,
-      })
+      getDocs(
+        query(
+          collection(database, "parents"),
+          where("email", "==", e.target.email.value),
+          where(documentId(), "!=", parent_id)
+        )
+      )
         .then((res) => {
-          router.push("/parents/");
+          if (res.docs.length != 0) {
+            setMsg("Parent with this email already exist.");
+          } else {
+            updateDoc(doc(database, "parents", parent_id), {
+              first_name: e.target.first_name.value,
+              last_name: e.target.last_name.value,
+              mobile: e.target.mobile.value,
+              email: e.target.email.value,
+            })
+              .then((res) => {
+                router.push("/parents/");
+              })
+              .catch((error) => {
+                //console.log(error);
+              });
+          }
         })
         .catch((error) => {
           //console.log(error);
