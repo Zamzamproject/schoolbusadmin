@@ -1,13 +1,6 @@
 import { database } from "@/parts/Database";
 import Header from "@/parts/Header";
 import {
-  addDoc,
-  getDocs,
-  query,
-  collection,
-  where,
-  serverTimestamp,
-  documentId,
   getDoc,
   doc,
   updateDoc,
@@ -37,8 +30,7 @@ export default function EditParent() {
     e.preventDefault();
     if (
       e.target.first_name.value === "" ||
-      e.target.last_name.value === "" ||
-      e.target.email.value === ""
+      e.target.last_name.value === ""
     ) {
       setMsg("Please enter all the required feilds");
     } else if (!/^[a-zA-Z ]+$/.test(e.target.first_name.value)) {
@@ -46,30 +38,13 @@ export default function EditParent() {
     } else if (!/^[a-zA-Z ]+$/.test(e.target.last_name.value)) {
       setMsg("Please enter a valid last name.");
     } else {
-      getDocs(
-        query(
-          collection(database, "parents"),
-          where("email", "==", e.target.email.value),
-          where(documentId(), "!=", parent_id)
-        )
-      )
+      updateDoc(doc(database, "parents", parent_id), {
+        first_name: e.target.first_name.value,
+        last_name: e.target.last_name.value,
+        mobile: e.target.mobile.value,
+      })
         .then((res) => {
-          if (res.docs.length != 0) {
-            setMsg("Parent with this email already exist.");
-          } else {
-            updateDoc(doc(database, "parents", parent_id), {
-              first_name: e.target.first_name.value,
-              last_name: e.target.last_name.value,
-              mobile: e.target.mobile.value,
-              email: e.target.email.value,
-            })
-              .then((res) => {
-                router.push("/parents/");
-              })
-              .catch((error) => {
-                //console.log(error);
-              });
-          }
+          router.push("/parents/");
         })
         .catch((error) => {
           //console.log(error);
@@ -129,22 +104,6 @@ export default function EditParent() {
               className="bg-gray-50 border border-gray-300 text-[#7f0000] text-sm rounded-lg focus:ring-red-500 focus:border-blue-500 block w-full p-2.5 "
               required
               defaultValue={data ? data.mobile : ""}
-            />
-          </div>
-          <div className="mb-5">
-            <label
-              htmlFor="email"
-              className="block mb-2 text-sm font-medium text-[#fefcc0] "
-            >
-              E-mail
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              className="bg-gray-50 border border-gray-300 text-[#7f0000] text-sm rounded-lg focus:ring-red-500 focus:border-blue-500 block w-full p-2.5 "
-              required
-              defaultValue={data ? data.email : ""}
             />
           </div>
 
