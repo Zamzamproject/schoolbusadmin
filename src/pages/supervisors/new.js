@@ -60,7 +60,7 @@ export default function NewSupervisors() {
       )
         .then((res) => {
           if (res.docs.length != 0) {
-            setMsg("Parent with this email already exist.");
+            setMsg("User with this email already exist.");
           } else {
             const tmpTirebaseApp = initializeApp(firebaseConfig, "secondary");
             const tmpAuth = getAuth(tmpTirebaseApp);
@@ -89,7 +89,7 @@ export default function NewSupervisors() {
                   });
               })
               .catch((error) => {
-                setMsg("Something went wrong...");
+                setMsg("User with this email already exist.");
               });
           }
         })

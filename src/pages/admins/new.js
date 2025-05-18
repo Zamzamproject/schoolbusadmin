@@ -43,7 +43,7 @@ export default function NewAdmin() {
         })
       })
       .catch(error => {
-        setMsg("Something went wrong...");
+        setMsg("User with this email already exist.");
       })
     }
   }

@@ -37,11 +37,17 @@ export default function NewDriver() {
 
   const handleAddNew = (e) => {
     e.preventDefault();
+    console.log(
+      e.target.first_name.value ,
+      e.target.last_name.value ,
+      e.target.email.value,
+      e.target.password.value);
+    
     if (
       e.target.first_name.value === "" ||
       e.target.last_name.value === "" || 
       e.target.email.value === "" ||
-      e.target.password.value != ""
+      e.target.password.value == ""
     ) {
       setMsg("Please enter all the required feilds");
     } else if (!/^[a-zA-Z ]+$/.test(e.target.first_name.value)) {
@@ -59,7 +65,7 @@ export default function NewDriver() {
       )
         .then((res) => {
           if (res.docs.length != 0) {
-            setMsg("Parent with this email already exist.");
+            setMsg("User with this email already exist.");
           } else {
             const tmpTirebaseApp = initializeApp(firebaseConfig, "secondary");
             const tmpAuth = getAuth(tmpTirebaseApp);
@@ -88,7 +94,7 @@ export default function NewDriver() {
                   });
               })
               .catch((error) => {
-                setMsg("Something went wrong...");
+                setMsg("User with this email already exist.");
               });
           }
         })
@@ -106,15 +112,30 @@ export default function NewDriver() {
         <form className="max-w-sm mx-auto text-center" onSubmit={handleAddNew}>
           <div className="mb-5">
             <label
-              htmlFor="name"
+              htmlFor="first_name"
               className="block mb-2 text-sm font-medium text-[#fefcc0] "
             >
-              Name
+              First Name
             </label>
             <input
               type="text"
-              id="name"
-              name="name"
+              id="first_name"
+              name="first_name"
+              className="bg-gray-50 border border-gray-300 text-[#7f0000] text-sm rounded-lg focus:ring-red-500 focus:border-blue-500 block w-full p-2.5 "
+              required
+            />
+          </div>
+          <div className="mb-5">
+            <label
+              htmlFor="last_name"
+              className="block mb-2 text-sm font-medium text-[#fefcc0] "
+            >
+              Last Name
+            </label>
+            <input
+              type="text"
+              id="last_name"
+              name="last_name"
               className="bg-gray-50 border border-gray-300 text-[#7f0000] text-sm rounded-lg focus:ring-red-500 focus:border-blue-500 block w-full p-2.5 "
               required
             />
